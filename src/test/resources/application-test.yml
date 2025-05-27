@@ -1,0 +1,44 @@
+# H2 Database Configuration
+spring:
+  # PostgreSQL Database Configuration
+  datasource:
+    driverClassName: org.postgresql.Driver
+    # Connection pool configuration for better performance
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        # Batch configuration for better performance
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+  flyway:
+    enabled: true
+
+# Application-specific Configuration
+tedtalks:
+  csv:
+    import:
+      enabled: false
+      path: classpath:data
+  influencer:
+    viewsWeight: 0.7
+    likesWeight: 0.3
+
+logging:
+  level:
+    com:
+      iodigital:
+        assignment:
+          tedtalks: DEBUG

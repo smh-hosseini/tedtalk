@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: tedtalks
+
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tedtalksdb
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        # Batch configuration for better performance
+        jdbc.batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db
+  # File Upload Configuration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB    # Increased for large CSV files
+      max-request-size: 50MB # Increased for large CSV files
+      # Temp directory for file uploads
+      location: ${java.io.tmpdir}
+
+  # Task Execution Configuration for async processing
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 25
+        keep-alive: 60s
+      thread-name-prefix: tedtalks-async-
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /api-docs
+
+
+# Application-specific Configuration
+tedtalks:
+  upload:
+    dir: ${user.dir}/uploads
+  csv:
+    import:
+      enabled: true
+      path: classpath:data
+      batchSize: 100  # Batch size for large file imports
+  influencer:
+    viewsWeight: 0.7
+    likesWeight: 0.3
+
+# Server Configuration
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 2KB
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.iodigital.assignment.tedtalks: INFO
+    org.hibernate.SQL: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/tedtalks-analysis.log
+
